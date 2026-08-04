@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study+ Admin</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/8b1e3c3d4d.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="logo">
+            <h1>Study<span>+</span></h1>
+        </div>
+        <ul>
+            <li class="active" data-page="dashboard">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </li>
+            <li data-page="usuarios">
+                <i class="fa-solid fa-users"></i>
+                <span>Usuários</span>
+            </li>
+            <li data-page="admins">
+                <i class="fa-solid fa-user-shield"></i>
+                <span>Administradores</span>
+            </li>
+            <li data-page="materias">
+                <i class="fa-solid fa-book"></i>
+                <span>Matérias</span>
+            </li>
+            <li data-page="questoes">
+                <i class="fa-solid fa-circle-question"></i>
+                <span>Questões</span>
+            </li>
+            <li data-page="simulados">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>Simulados</span>
+            </li>
+            <li data-page="avisos">
+                <i class="fa-solid fa-bell"></i>
+                <span>Avisos</span>
+            </li>
+            <li data-page="config">
+                <i class="fa-solid fa-gear"></i>
+                <span>Configurações</span>
+            </li>
+            <li id="logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Sair</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main">
+        <header>
+            <div>
+                <h2>Painel Administrativo</h2>
+                <p>Bem-vindo ao Study+</p>
+            </div>
+            <div class="perfil">
+                <div class="foto">
+                    <img src="https://ui-avatars.com/api/?background=ffbd59&color=111&name=A" alt="">
+                </div>
+                <div>
+                    <h4 id="adminNome">Administrador</h4>
+                    <span id="adminCargo">Super Admin</span>
+                </div>
+            </div>
+        </header>
+
+        <section id="dashboard" class="pagina ativa">
+            <div class="cards">
+                <div class="card">
+                    <div>
+                        <h3 id="totalUsuarios">0</h3>
+                        <p>Usuários</p>
+                    </div>
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3 id="usuariosOnline">0</h3>
+                        <p>Online</p>
+                    </div>
+                    <i class="fa-solid fa-user-check"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3 id="totalMaterias">0</h3>
+                        <p>Matérias</p>
+                    </div>
+                    <i class="fa-solid fa-book"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3 id="totalQuestoes">0</h3>
+                        <p>Questões</p>
+                    </div>
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3 id="totalSimulados">0</h3>
+                        <p>Simulados</p>
+                    </div>
+                    <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3 id="totalAdmins">0</h3>
+                        <p>Administradores</p>
+                    </div>
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+            </div>
+
+            <div class="linha">
+                <div class="painel grande">
+                    <div class="titulo">
+                        <h3>Últimos usuários cadastrados</h3>
+                        <button id="atualizarUsuarios">Atualizar</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Cadastro</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ultimosUsuarios"></tbody>
+                    </table>
+                </div>
+
+                <div class="painel pequeno">
+                    <h3>Resumo</h3>
+                    <div class="resumo">
+                        <div>
+                            <span>Total de usuários</span>
+                            <strong id="rUsuarios">0</strong>
+                        </div>
+                        <div>
+                            <span>Total de administradores</span>
+                            <strong id="rAdmins">0</strong>
+                        </div>
+                        <div>
+                            <span>Total de matérias</span>
+                            <strong id="rMaterias">0</strong>
+                        </div>
+                        <div>
+                            <span>Total de simulados</span>
+                            <strong id="rSimulados">0</strong>
+                        </div>
+                        <div>
+                            <span>Total de questões</span>
+                            <strong id="rQuestoes">0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="usuarios" class="pagina">
+            <div class="topo-pagina">
+                <h2>Usuários</h2>
+                <div class="acoes">
+                    <input type="text" id="pesquisarUsuario" placeholder="Pesquisar usuário...">
+                    <button id="novoUsuario">Novo</button>
+                </div>
+            </div>
+            <div class="painel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Cadastro</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaUsuarios"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="admins" class="pagina">
+            <div class="topo-pagina">
+                <h2>Administradores</h2>
+                <div class="acoes">
+                    <input type="text" id="pesquisarAdmin" placeholder="Pesquisar administrador">
+                    <button id="abrirModalAdmin">Novo Administrador</button>
+                </div>
+            </div>
+            <div class="painel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Cargo</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaAdmins"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="modal" id="modalAdmin">
+            <div class="modal-conteudo">
+                <span class="fechar" id="fecharModal">&times;</span>
+                <h3>Promover Administrador</h3>
+                <p class="modal-subtitulo">Busque pelo nome ou e-mail de um usuário cadastrado para conceder privilégios de Admin.</p>
+                <div class="campo">
+                    <div class="input-container-modal">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="pesquisaUsuarioModal" placeholder="Digitar nome ou e-mail do usuário...">
+                    </div>
+                </div>
+                <div style="max-height: 200px; overflow-y: auto; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 12px; display: none;" id="containerListaModal">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tbody id="listaUsuariosModal"></tbody>
+                    </table>
+                </div>
+                <div class="campo" id="campoUsuarioSelecionado" style="display: none; background: rgba(255,189,89,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--gold);">
+                    <label style="color: var(--gold); font-weight: 600;">Usuário Selecionado:</label>
+                    <span id="nomeUsuarioSelecionado" style="font-weight: 500; display: block; margin-top: 4px;">-</span>
+                    <span id="emailUsuarioSelecionado" style="color: var(--sub); font-size: 13px;">-</span>
+                </div>
+                <div class="acoes-modal" style="margin-top: 20px;">
+                    <button id="cancelarAdmin" class="btn-modal-secundario">Cancelar</button>
+                    <button id="salvarAdmin" class="btn-modal-primario">Confirmar Promoção</button>
+                </div>
+            </div>
+        </div>
+
+        <section id="materias" class="pagina">
+            <div class="topo-pagina">
+                <h2>Matérias</h2>
+                <button id="novaMateria">Adicionar Matéria</button>
+            </div>
+            <div class="painel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Quantidade de Questões</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaMaterias"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="questoes" class="pagina">
+            <div class="topo-pagina">
+                <h2>Questões</h2>
+                <button id="novaQuestao">Nova Questão</button>
+            </div>
+            <div class="painel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Matéria</th>
+                            <th>Dificuldade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaQuestoes"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="simulados" class="pagina">
+            <div class="topo-pagina">
+                <h2>Simulados</h2>
+                <button id="novoSimulado">Novo Simulado</button>
+            </div>
+            <div class="painel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Questões</th>
+                            <th>Tempo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaSimulados"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="avisos" class="pagina">
+            <div class="topo-pagina">
+                <h2>Avisos</h2>
+                <button id="novoAviso">Novo Aviso</button>
+            </div>
+            <div class="painel">
+                <div class="campo">
+                    <label>Título</label>
+                    <input type="text" id="tituloAviso" placeholder="Digite um título">
+                </div>
+                <div class="campo">
+                    <label>Mensagem</label>
+                    <textarea id="mensagemAviso" rows="8" placeholder="Digite o aviso..."></textarea>
+                </div>
+                <button id="enviarAviso">Enviar Aviso</button>
+            </div>
+        </section>
+
+        <section id="config" class="pagina">
+            <div class="topo-pagina">
+                <h2>Configurações</h2>
+            </div>
+            <div class="painel">
+                <div class="campo">
+                    <label>Nome da Plataforma</label>
+                    <input type="text" id="nomeSistema" value="Study+">
+                </div>
+                <div class="campo">
+                    <label>Mensagem da Página Inicial</label>
+                    <textarea id="mensagemInicial" rows="4"></textarea>
+                </div>
+                <div class="campo">
+                    <label>Modo Manutenção</label>
+                    <select id="modoManutencao">
+                        <option value="false">Desativado</option>
+                        <option value="true">Ativado</option>
+                    </select>
+                </div>
+                <button id="salvarConfig">Salvar Configurações</button>
+            </div>
+        </section>
+
+        <div class="toast" id="toast">
+            <span id="toastTexto"></span>
+        </div>
+
+        <div class="overlay" id="overlay"></div>
+        <script type="module" src="/js/admin.js"></script>
+    </div>
+</body>
+
+</html>

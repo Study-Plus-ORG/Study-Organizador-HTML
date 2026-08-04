@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Study+ | Recuperar senha</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+</head>
+<body class="cadastro-body">
+  <div class="cadastro-container">
+    <div class="cadastro-card">
+      <h1 class="landing-logo">Study<span>+</span></h1>
+      <p class="cadastro-tagline">Recuperar senha</p>
+
+      <div id="mensagem" style="display:none; text-align:center; padding: 0.8rem; border-radius: 0.5rem; margin-bottom: 1rem; font-size: 0.95rem;"></div>
+
+      <form class="cadastro-form" id="formRecuperar">
+        <div class="input-group">
+          <label for="email">E-mail da sua conta</label>
+          <input type="email" id="email" placeholder="seu@email.com" required>
+        </div>
+        <button type="submit" class="btn-cadastrar">Enviar link de recuperação →</button>
+      </form>
+
+      <p class="login-link" style="margin-top: 1.5rem;">
+        Lembrou a senha? <a href="login.html">Voltar ao login</a>
+      </p>
+    </div>
+    <div class="cadastro-footer">
+      <span>🚀 Estude com foco e organização</span>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth } from '/js/firebase.js';
+    import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+    const mensagem = document.getElementById('mensagem');
+
+    function mostrarMsg(texto, sucesso) {
+      mensagem.textContent = texto;
+      mensagem.style.display = 'block';
+      mensagem.style.background = sucesso ? 'rgba(46,213,115,0.15)' : 'rgba(255,71,87,0.15)';
+      mensagem.style.color = sucesso ? '#2ed573' : '#ff4757';
+    }
+
+    document.getElementById('formRecuperar').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        mostrarMsg('E-mail enviado! Verifique sua caixa de entrada.', true);
+        document.getElementById('formRecuperar').reset();
+      } catch (erro) {
+        if (erro.code === 'auth/user-not-found') {
+          mostrarMsg('Nenhuma conta encontrada com esse e-mail.', false);
+        } else {
+          mostrarMsg('Erro ao enviar. Tente novamente.', false);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contador Animado</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#0f172a;
+    color:#fff;
+}
+
+.hero{
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:3rem;
+}
+
+.stats{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:80px;
+    flex-wrap:wrap;
+    background:#1e293b;
+    padding:80px 20px;
+}
+
+.card{
+    width:250px;
+    padding:35px;
+    border-radius:18px;
+    background:#334155;
+    text-align:center;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.numero{
+    font-size:3.5rem;
+    font-weight:bold;
+    color:#60a5fa;
+}
+
+.texto{
+    margin-top:10px;
+    font-size:1.1rem;
+    color:#cbd5e1;
+}
+
+.final{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:2rem;
+}
+</style>
+
+</head>
+<body>
+
+<section class="hero">
+    <div>
+        <h1>Role a página ↓</h1>
+        <p>Os números serão animados quando aparecerem.</p>
+    </div>
+</section>
+
+<section class="stats">
+
+    <div class="card">
+        <div class="numero" data-target="12500" data-suffix="+">0</div>
+        <div class="texto">Usuários</div>
+    </div>
+
+    <div class="card">
+        <div class="numero" data-target="987654">0</div>
+        <div class="texto">Questões Resolvidas</div>
+    </div>
+
+    <div class="card">
+        <div class="numero" data-target="98" data-suffix="%">0</div>
+        <div class="texto">Taxa de Aprovação</div>
+    </div>
+
+</section>
+
+<section class="final">
+    Fim da página
+</section>
+
+<script>
+const counters = document.querySelectorAll(".numero");
+
+const observer = new IntersectionObserver((entries)=>{
+
+    entries.forEach(entry=>{
+
+        if(entry.isIntersecting){
+
+            const counter = entry.target;
+            const target = Number(counter.dataset.target);
+            const suffix = counter.dataset.suffix || "";
+
+            let current = 0;
+            const duration = 2000;
+            const stepTime = 19;
+            const increment = target / (duration / stepTime);
+
+            function update(){
+
+                current += increment;
+
+                if(current < target){
+
+                    counter.textContent =
+                        Math.ceil(current).toLocaleString("pt-BR") + suffix;
+
+                    requestAnimationFrame(update);
+
+                }else{
+
+                    counter.textContent =
+                        target.toLocaleString("pt-BR") + suffix;
+
+                }
+
+            }
+
+            update();
+
+            observer.unobserve(counter);
+
+        }
+
+    });
+
+},{threshold:0.5});
+
+counters.forEach(counter=>observer.observe(counter));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Study+ | Organizador de Estudos</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="body1">
+
+<header>
+  <img src="img/porta.png" class="sair" alt="Perfil" onclick="document.getElementById('painelPerfil').style.display='block'; document.getElementById('overlay').style.display='block';" style="cursor:pointer;">
+</header>
+
+<div id="btnPerfil">
+  <img id="fotoPerfil" src="https://ui-avatars.com/api/?name=U&background=ffb547&color=fff&rounded=true">
+</div>
+
+<div id="overlay" onclick="fecharPainel()"></div>
+
+<div id="painelPerfil">
+  <button id="fecharPainel">✕</button>
+  <div class="painel-foto-wrap">
+    <div class="painel-foto-container">
+      <img id="fotoPerfilGrande" src="https://ui-avatars.com/api/?name=U&background=ffb547&color=fff&rounded=true">
+      <div class="painel-foto-edit" onclick="document.getElementById('inputFoto').click()">✏️</div>
+    </div>
+    <input type="file" id="inputFoto" accept="image/*">
+    <h2 id="nomeUsuario">Carregando...</h2>
+    <p class="painel-nivel">Nível <span id="nivelUsuario">1</span></p>
+  </div>
+  <div class="painel-pontos">
+    <p class="painel-pontos-label">Pontos</p>
+    <p id="pontosUsuario">0 XP</p>
+  </div>
+  <button class="btn-logout" onclick="logout()">Sair</button>
+</div>
+
+<main class="container">
+
+  <section class="card">
+    <div class="card-header drag-handle">
+      <div class="drag-lines">
+        <div class="line-short"></div>
+        <div class="line-long"></div>
+      </div>
+    </div>
+    <div class="card-content">
+      <h2>Planejamento do Dia</h2>
+      <ul>
+        <li>Matemática - 1h</li>
+        <li>História - 40min</li>
+        <li>Revisão de Inglês</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <button class="pin-btn" data-pinned="false">📌</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header drag-handle">
+      <div class="drag-lines">
+        <div class="line-short"></div>
+        <div class="line-long"></div>
+      </div>
+    </div>
+    <div class="card-content">
+      <h2>Matérias</h2>
+      <ul>
+        <li>Matemática</li>
+        <li>Português</li>
+        <li>História</li>
+        <li>Geografia</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <button class="pin-btn" data-pinned="false">📌</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header drag-handle">
+      <div class="drag-lines">
+        <div class="line-short"></div>
+        <div class="line-long"></div>
+      </div>
+    </div>
+    <div class="card-content">
+      <h2>Tarefas</h2>
+      <div class="taskInput">
+        <input type="text" id="novaTarefa" placeholder="Nova tarefa..." />
+        <button class="btn-add" onclick="addTarefa()">Adicionar</button>
+      </div>
+      <ul id="listaTarefas">
+        <li onclick="remover(this)">✔ Fazer exercícios de matemática</li>
+        <li onclick="remover(this)">✔ Ler capítulo de história</li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <button class="pin-btn" data-pinned="false">📌</button>
+    </div>
+  </section>
+
+  <section class="card whiteboardCard">
+    <div class="card-header drag-handle">
+      <div class="drag-lines">
+        <div class="line-short"></div>
+        <div class="line-long"></div>
+      </div>
+    </div>
+    <div class="card-content">
+      <h2>Whiteboard</h2>
+      <canvas id="board"></canvas>
+      <div class="boardButtons">
+        <button onclick="limparCanvas()">Limpar</button>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button class="pin-btn" data-pinned="false">📌</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header drag-handle">
+      <div class="drag-lines">
+        <div class="line-short"></div>
+        <div class="line-long"></div>
+      </div>
+    </div>
+    <div class="card-content">
+      <h2>Google Agenda</h2>
+      <div id="google-signin" style="text-align:center; padding: 1rem 0;">
+        <button onclick="loginGoogle()" class="btn-google">Conectar Google Agenda</button>
+      </div>
+      <ul id="listaEventos" style="display:none;"></ul>
+    </div>
+    <div class="card-footer">
+      <button class="pin-btn" data-pinned="false">📌</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>Study+ © 2026</footer>
+
+<script src="script.js"></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
+<script src="/js/agenda.js"></script>
+
+<script type="module">
+  import { auth, db } from '/js/firebase.js';
+  import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+  import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = '/pages/login.html'; return; }
+
+    const snap = await getDoc(doc(db, 'usuarios', user.uid));
+    const dados = snap.data();
+
+    const nome = dados?.nome || user.displayName || 'Usuário';
+    const pontos = dados?.pontos || 0;
+    const nivel = dados?.nivel || 1;
+    const foto = dados?.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=ffb547&color=fff&rounded=true`;
+
+    document.getElementById('nomeUsuario').textContent = nome;
+    document.getElementById('pontosUsuario').textContent = pontos + ' XP';
+    document.getElementById('nivelUsuario').textContent = nivel;
+    document.getElementById('fotoPerfil').src = foto;
+    document.getElementById('fotoPerfilGrande').src = foto;
+
+    document.getElementById('inputFoto').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 500000) { alert('Foto muito grande! Use uma imagem menor que 500KB.'); return; }
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = reader.result;
+        document.getElementById('fotoPerfil').src = base64;
+        document.getElementById('fotoPerfilGrande').src = base64;
+        await updateDoc(doc(db, 'usuarios', user.uid), { foto: base64 });
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  document.getElementById('btnPerfil').addEventListener('click', () => {
+    document.getElementById('painelPerfil').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+  });
+
+  document.getElementById('fecharPainel').addEventListener('click', () => fecharPainel());
+
+  window.fecharPainel = () => {
+    document.getElementById('painelPerfil').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+  };
+
+  window.logout = async () => {
+    await signOut(auth);
+    window.location.href = '/pages/login.html';
+  };
+</script>
+
+</body>
+</html>
